@@ -3,6 +3,7 @@ package com.example;
 import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.infra.Blackhole;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,7 +15,7 @@ import java.util.stream.Collectors;
 @Measurement(iterations = 2, time = 5, timeUnit = TimeUnit.SECONDS)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class FirstScenario {
+public class SecondScenario {
     @Param({"1000000"})
     private int N;
 
@@ -36,7 +37,8 @@ public class FirstScenario {
     @Benchmark
     public void CollectionCaching(Blackhole blackhole) {
         List<Integer> streamResult = list.stream()
-                .map(x -> x + 1)
+                .map(x -> (int)(Math.sqrt(x) * Math.log(x)))
+                .sorted()
                 .collect(Collectors.toCollection(ArrayList::new));
 
         for (int i = 0; i < M; i++) {
@@ -48,7 +50,11 @@ public class FirstScenario {
     @Benchmark
     public void PipelineRecreation(Blackhole blackhole) {
         for (int i = 0; i < M; i++) {
-            int result = list.stream().map(x -> x + 1).max(Integer::compare).get();
+            int result = list.stream()
+                    .map(x -> (int)(Math.sqrt(x) * Math.log(x)))
+                    .sorted()
+                    .max(Integer::compare)
+                    .get();
             blackhole.consume(result);
         }
     }
