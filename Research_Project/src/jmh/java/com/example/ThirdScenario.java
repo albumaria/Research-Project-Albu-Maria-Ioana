@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 @Measurement(iterations = 2, time = 5, timeUnit = TimeUnit.SECONDS)
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
-public class SecondScenario {
-    @Param({"1000000"})
+public class ThirdScenario {
+    @Param({"10000000", "100000000"})
     private int N;
 
-    @Param({"2", "3", "5", "10", "20"})
+    @Param({"2"})
     private int M;
 
     private List<Integer> list;
@@ -36,8 +36,7 @@ public class SecondScenario {
     @Benchmark
     public void CollectionCaching(Blackhole blackhole) {
         List<Integer> streamResult = list.stream()
-                .map(x -> (int)(Math.sqrt(x) * Math.log(x)))
-                .sorted()
+                .map(x -> x + 1)
                 .collect(Collectors.toCollection(ArrayList::new));
 
         for (int i = 0; i < M; i++) {
@@ -50,8 +49,7 @@ public class SecondScenario {
     public void PipelineRecreation(Blackhole blackhole) {
         for (int i = 0; i < M; i++) {
             int result = list.stream()
-                    .map(x -> (int)(Math.sqrt(x) * Math.log(x)))
-                    .sorted()
+                    .map(x -> x + 1)
                     .max(Integer::compare)
                     .get();
             blackhole.consume(result);
