@@ -22,6 +22,7 @@ public class FirstScenario {
     private int M;
 
     private List<Integer> list;
+    private static final int RANDOM_LIMIT = 5000;
 
     @Setup(Level.Trial)
     public void setupTrial() {
@@ -29,7 +30,7 @@ public class FirstScenario {
         Random random = new Random(42);
 
         for(int i = 0; i < N; i++) {
-            list.add(random.nextInt());
+            list.add(random.nextInt(RANDOM_LIMIT));
         }
     }
 
